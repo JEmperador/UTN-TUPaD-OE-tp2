@@ -14,7 +14,6 @@ import csv
 import os
 import matplotlib.pyplot as plt # Dependencia para generar Graficos
 
-
 # ==========================================================
 # CONSTANTES
 # ==========================================================
@@ -25,18 +24,51 @@ RUTA_GRAFICO_PROMEDIOS = "../resultados/grafico_promedios.png"
 RUTA_GRAFICO_PRECIPITACIONES = "../resultados/grafico_precipitaciones.png"
 
 DATOS_EJEMPLO = [
-    {"fecha": "2024-01-01", "temperatura_maxima": 32.0, "temperatura_minima": 18.5, "precipitacion": 12.0},
-    {"fecha": "2024-01-02", "temperatura_maxima": 30.1, "temperatura_minima": 20.0, "precipitacion":  0.0},
-    {"fecha": "2024-01-03", "temperatura_maxima": 25.3, "temperatura_minima": 15.8, "precipitacion": 20.5},
-    {"fecha": "2024-01-04", "temperatura_maxima": 22.8, "temperatura_minima": 12.0, "precipitacion": 35.0},
-    {"fecha": "2024-01-05", "temperatura_maxima": 27.0, "temperatura_minima": 16.5, "precipitacion":  5.5},
+    {
+        "fecha": "2024-01-01",
+        "temperatura_maxima": 32.0,
+        "temperatura_minima": 18.5,
+        "precipitacion": 12.0,
+    },
+    {
+        "fecha": "2024-01-02",
+        "temperatura_maxima": 30.1,
+        "temperatura_minima": 20.0,
+        "precipitacion": 0.0,
+    },
+    {
+        "fecha": "2024-01-03",
+        "temperatura_maxima": 25.3,
+        "temperatura_minima": 15.8,
+        "precipitacion": 20.5,
+    },
+    {
+        "fecha": "2024-01-04",
+        "temperatura_maxima": 22.8,
+        "temperatura_minima": 12.0,
+        "precipitacion": 35.0,
+    },
+    {
+        "fecha": "2024-01-05",
+        "temperatura_maxima": 27.0,
+        "temperatura_minima": 16.5,
+        "precipitacion": 5.5,
+    },
 ]
 
 NOMBRES_MESES = {
-    "01": "Enero",    "02": "Febrero",   "03": "Marzo",
-    "04": "Abril",    "05": "Mayo",      "06": "Junio",
-    "07": "Julio",    "08": "Agosto",    "09": "Septiembre",
-    "10": "Octubre",  "11": "Noviembre", "12": "Diciembre",
+    "01": "Enero",
+    "02": "Febrero",
+    "03": "Marzo",
+    "04": "Abril",
+    "05": "Mayo",
+    "06": "Junio",
+    "07": "Julio",
+    "08": "Agosto",
+    "09": "Septiembre",
+    "10": "Octubre",
+    "11": "Noviembre",
+    "12": "Diciembre",
 }
 
 MENU = """
@@ -46,7 +78,7 @@ MENU = """
   1. Cargar datos desde CSV
   2. Mostrar registros
   3. Mostrar estadísticas
-  4. Generar estadisticas
+  4. Generar gráficos
   5. Salir
 ============================================="""
 
@@ -106,7 +138,7 @@ def construir_etiquetas_meses(fechas):
     - etiquetas:  lista con el número de día de cada fecha (sin cero inicial)
     - inicio_mes: diccionario { índice: "NombreMes" } donde empieza cada mes
     """
-    etiquetas  = []
+    etiquetas = []
     inicio_mes = {}
     mes_actual = None
 
@@ -135,9 +167,7 @@ def aplicar_formato_eje(ax, etiquetas, inicio_mes, indices):
     for idx, nombre_mes in inicio_mes.items():
         ax.axvline(x=idx, color="gray", linestyle="--", linewidth=0.8, alpha=0.7)
         ax.text(
-            idx + 0.3, ax.get_ylim()[1],
-            nombre_mes,
-            fontsize=8, color="gray", va="top"
+            idx + 0.3, ax.get_ylim()[1], nombre_mes, fontsize=8, color="gray", va="top"
         )
 
 
@@ -157,6 +187,7 @@ def crear_csv_ejemplo():
     with open(RUTA_DATOS, "w", newline="", encoding="utf-8") as archivo:
         campos = ["fecha", "temperatura_maxima", "temperatura_minima", "precipitacion"]
         escritor = csv.DictWriter(archivo, fieldnames=campos)
+
         escritor.writeheader()
 
         for registro in DATOS_EJEMPLO:
@@ -204,16 +235,22 @@ def mostrar_datos():
     if not validar_datos_cargados():
         return
 
-    print("
-REGISTROS CLIMÁTICOS")
+    print("\nREGISTROS CLIMÁTICOS")
     print(separador("-", 75))
 
     for registro in datos_climaticos:
         print(
-            "Fecha:", registro["fecha"],
-            "| Máx:", registro["temperatura_maxima"], "°C",
-            "| Mín:", registro["temperatura_minima"], "°C",
-            "| Precip:", registro["precipitacion"], "mm",
+            "Fecha:",
+            registro["fecha"],
+            "| Máx:",
+            registro["temperatura_maxima"],
+            "°C",
+            "| Mín:",
+            registro["temperatura_minima"],
+            "°C",
+            "| Precip:",
+            registro["precipitacion"],
+            "mm",
         )
 
 
@@ -232,19 +269,19 @@ def calcular_estadisticas():
 
     suma_maximas = 0.0
     suma_minimas = 0.0
-    suma_precip  = 0.0
+    suma_precip = 0.0
 
     maxima_global = datos_climaticos[0]["temperatura_maxima"]
     minima_global = datos_climaticos[0]["temperatura_minima"]
 
     for registro in datos_climaticos:
-        t_max  = registro["temperatura_maxima"]
-        t_min  = registro["temperatura_minima"]
+        t_max = registro["temperatura_maxima"]
+        t_min = registro["temperatura_minima"]
         precip = registro["precipitacion"]
 
         suma_maximas += t_max
         suma_minimas += t_min
-        suma_precip  += precip
+        suma_precip += precip
 
         if t_max > maxima_global:
             maxima_global = t_max
@@ -272,13 +309,12 @@ def mostrar_estadisticas():
     if estadisticas is None:
         return
 
-    print("
-ESTADÍSTICAS CLIMÁTICAS")
+    print("\nESTADÍSTICAS CLIMÁTICAS")
     print(separador("-", 45))
-    print("Temperatura promedio:", estadisticas["temp_promedio"],   "°C")
-    print("Temperatura máxima:", estadisticas["maxima_global"],   "°C")
-    print("Temperatura mínima:", estadisticas["minima_global"],   "°C")
-    print("Precipitación promedio:", estadisticas["precip_promedio"], "mm")
+    print("Temperatura promedio:        ", estadisticas["temp_promedio"], "°C")
+    print("Temperatura máxima:          ", estadisticas["maxima_global"], "°C")
+    print("Temperatura mínima:          ", estadisticas["minima_global"], "°C")
+    print("Precipitación promedio:      ", estadisticas["precip_promedio"], "mm")
 
 
 def calcular_precipitaciones_por_mes(fechas, precipitaciones):
@@ -292,12 +328,13 @@ def calcular_precipitaciones_por_mes(fechas, precipitaciones):
         mes = fecha.split("-")[1]
         nombre_mes = NOMBRES_MESES[mes]
 
+        # Si el mes no está en el diccionario, lo inicializa en 0
         if nombre_mes not in totales_mes:
             totales_mes[nombre_mes] = 0.0
 
         totales_mes[nombre_mes] += precipitaciones[i]
 
-    meses   = list(totales_mes.keys())
+    meses = list(totales_mes.keys())
     totales = [round(totales_mes[m], 1) for m in meses]
 
     return meses, totales
@@ -306,9 +343,9 @@ def calcular_precipitaciones_por_mes(fechas, precipitaciones):
 def generar_grafico():
     """
     Genera tres gráficos y los guarda en ../resultados/:
-    - grafico_temperatura.png:              evolución de máximas y mínimas diarias
-    - grafico_promedios.png:         promedio diario con línea de promedio global
-    - grafico_precipitaciones.png:            suma total de precipitaciones por mes
+    - grafico_temperatura.png:      evolución de máximas y mínimas diarias
+    - grafico_promedios.png:        promedio diario con línea de promedio global
+    - grafico_precipitaciones.png:  suma total de precipitaciones por mes
     """
     if not validar_datos_cargados():
         return
@@ -325,7 +362,9 @@ def generar_grafico():
         minimas.append(registro["temperatura_minima"])
         precipitaciones.append(registro["precipitacion"])
 
-        promedio_dia = round((registro["temperatura_maxima"] + registro["temperatura_minima"]) / 2, 2)
+        promedio_dia = round(
+            (registro["temperatura_maxima"] + registro["temperatura_minima"]) / 2, 2
+        )
         promedios.append(promedio_dia)
 
     indices = list(range(len(fechas)))
@@ -334,7 +373,9 @@ def generar_grafico():
     # ----- Gráfico 1: máximas y mínimas -----
     fig1, ax1 = plt.subplots(figsize=(14, 5))
     ax1.plot(indices, maximas, marker="o", markersize=3, color="tomato", label="Máxima")
-    ax1.plot(indices, minimas, marker="o", markersize=3, color="steelblue", label="Mínima")
+    ax1.plot(
+        indices, minimas, marker="o", markersize=3, color="steelblue", label="Mínima"
+    )
     ax1.set_title("Evolución de Temperaturas Máximas y Mínimas")
     ax1.set_xlabel("Día")
     ax1.set_ylabel("Temperatura (°C)")
@@ -348,10 +389,22 @@ def generar_grafico():
 
     # ----- Gráfico 2: promedio diario -----
     fig2, ax2 = plt.subplots(figsize=(14, 5))
-    ax2.plot(indices, promedios, marker="s", markersize=3, color="mediumseagreen", label="Promedio diario")
+    ax2.plot(
+        indices,
+        promedios,
+        marker="s",
+        markersize=3,
+        color="mediumseagreen",
+        label="Promedio diario",
+    )
 
     promedio_global = round(sum(promedios) / len(promedios), 2)
-    ax2.axhline(y=promedio_global, color="gray", linestyle="--", label=f"Promedio global ({promedio_global} °C)")
+    ax2.axhline(
+        y=promedio_global,
+        color="gray",
+        linestyle="--",
+        label=f"Promedio global ({promedio_global} °C)",
+    )
 
     ax2.set_title("Promedio de Temperatura por Día")
     ax2.set_xlabel("Día")
@@ -370,12 +423,15 @@ def generar_grafico():
     fig3, ax3 = plt.subplots(figsize=(7, 5))
     barras = ax3.bar(meses, totales, color="steelblue", width=0.5)
 
+    # Muestra el valor total encima de cada barra
     for barra, total in zip(barras, totales):
         ax3.text(
             barra.get_x() + barra.get_width() / 2,
             barra.get_height() + 1.5,
             f"{total} mm",
-            ha="center", va="bottom", fontsize=9
+            ha="center",
+            va="bottom",
+            fontsize=9,
         )
 
     ax3.set_title("Precipitaciones Totales por Mes")
@@ -420,8 +476,7 @@ def menu_principal():
             elif opcion == 4:
                 generar_grafico()
             elif opcion == 5:
-                print("
-Saliendo del programa. ¡Hasta luego!")
+                print("\nSaliendo del programa. ¡Hasta luego!")
 
         except ValueError:
             print("Error: ingrese un número entero.")
