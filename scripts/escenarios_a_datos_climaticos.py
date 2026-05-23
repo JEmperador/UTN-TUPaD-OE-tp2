@@ -5,9 +5,11 @@ Descripción: Carga datos climáticos desde un CSV y genera estadísticas y grá
 
 Estructuras utilizadas:
 - Datos Complejos
-- Funciones
+- Estructuras Condicionales
 - Estructuras Repetitivas
+- Funciones
 - Manejo de Errores
+- Manejo de Archivos
 """
 
 import csv
